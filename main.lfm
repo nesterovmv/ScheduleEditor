@@ -1,0 +1,25 @@
+object MainForm: TMainForm
+  Left = 729
+  Height = 240
+  Top = 269
+  Width = 320
+  Caption = 'DataBaseApp'
+  Menu = MainMenu1
+  OnCreate = FormCreate
+  LCLVersion = '1.0.12.0'
+  object MainMenu1: TMainMenu
+    left = 16
+    top = 16
+    object CloseProgram: TMenuItem
+      Caption = 'Выход'
+      OnClick = CloseProgramClick
+    end
+    object Directory: TMenuItem
+      Caption = 'Справочник'
+    end
+    object AboutProgram: TMenuItem
+      Caption = 'О программе'
+      OnClick = AboutProgramClick
+    end
+  end
+end
