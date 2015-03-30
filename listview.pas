@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, sqldb, DB, FileUtil, Forms, Controls, Graphics, Dialogs,
-  DBGrids, Menus, DbCtrls, metadata;
+  DBGrids, Menus, DbCtrls, StdCtrls, MetaData, SQLGenerationQuery;
 
 type
 
@@ -45,7 +45,8 @@ var
 begin
   SQLQuery1.Close;
   SQLQuery1.SQL.Clear;
-  SQLQuery1.SQL.Add('Select * FROM ' + table.PName);
+  SQLQuery1.SQL.Add('Select ' + SQLSelectCreate(Table) + ' FROM '
+  + SQLJoinCreate(Table));
   SQLQuery1.Open;
 
   with DBGrid1 do
@@ -54,6 +55,7 @@ begin
     begin
       Columns[i].Width := Table.fields[i].PWidth;
       Columns[i].Title.Caption := Table.fields[i].PCaption;
+      Columns[i].Visible := Table.fields[i].PVisible;
     end;
   end;
 end;

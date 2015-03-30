@@ -1,12 +1,12 @@
 object MainForm: TMainForm
-  Left = 729
-  Height = 240
-  Top = 269
-  Width = 320
+  Left = 416
+  Height = 87
+  Top = 85
+  Width = 306
   Caption = 'DataBaseApp'
   Menu = MainMenu1
   OnCreate = FormCreate
-  LCLVersion = '1.0.12.0'
+  LCLVersion = '1.2.4.0'
   object MainMenu1: TMainMenu
     left = 16
     top = 16

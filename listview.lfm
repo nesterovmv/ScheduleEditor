@@ -1,17 +1,17 @@
 object ListForm: TListForm
-  Left = 608
-  Height = 541
-  Top = 370
-  Width = 563
-  ClientHeight = 541
-  ClientWidth = 563
+  Left = 367
+  Height = 521
+  Top = 139
+  Width = 810
+  ClientHeight = 521
+  ClientWidth = 810
   OnClose = FormClose
-  LCLVersion = '1.0.12.0'
+  LCLVersion = '1.2.4.0'
   object DBGrid1: TDBGrid
     Left = 24
-    Height = 386
-    Top = 80
-    Width = 520
+    Height = 424
+    Top = 24
+    Width = 768
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWindow
     Columns = <>
@@ -21,7 +21,7 @@ object ListForm: TListForm
   object DBNavigator1: TDBNavigator
     Left = 120
     Height = 40
-    Top = 480
+    Top = 464
     Width = 304
     BevelOuter = bvNone
     ChildSizing.EnlargeHorizontal = crsScaleChilds
@@ -45,7 +45,7 @@ object ListForm: TListForm
     left = 69
     top = 22
   end
-  object DataSource1: TDatasource
+  object DataSource1: TDataSource
     DataSet = SQLQuery1
     left = 16
     top = 22
