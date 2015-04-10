@@ -7,20 +7,20 @@ interface
 uses
   Classes, SysUtils, MetaData;
 
-function SQLJoinCreate(CurrentTableG: TTable): string;
-function SQLSelectCreate(CurrentTableG: TTable): string;
+function SQLJoinCreate(TableForAdd: TTable): string;
+function SQLSelectCreate(TableForAdd: TTable): string;
 
 implementation
 
-function SQLJoinCreate(CurrentTableG: TTable): string;
+function SQLJoinCreate(TableForAdd: TTable): string;
 var
  i: integer;
  begin
-    with CurrentTableG do
+    with TableForAdd do
     begin
      Result := PName;
      begin
-       for i := 0 to High(CurrentTableG.Fields) do
+       for i := 0 to High(TableForAdd.Fields) do
        begin
          if Fields[i].PNeedForJoin then
          Result += ' INNER JOIN ' + Fields[i].PMyTableName + ' ON '
@@ -31,16 +31,16 @@ var
    end;
  end;
 
-function SQLSelectCreate(CurrentTableG: TTable): string;
+function SQLSelectCreate(TableForAdd: TTable): string;
 var
  i: integer;
  begin
     Result := '';
-     for i:= 0 to High(CurrentTableG.Fields) do
+     for i:= 0 to High(TableForAdd.Fields) do
      begin
-      Result += CurrentTableG.Fields[i].PMyTableName;
-      Result += '.' + CurrentTableG.Fields[i].PName;
-      if i <= High(CurrentTableG.Fields)-1 then
+      Result += TableForAdd.Fields[i].PMyTableName;
+      Result += '.' + TableForAdd.Fields[i].PName;
+      if i <= High(TableForAdd.Fields)-1 then
       Result += ', ';
      end;
     end;

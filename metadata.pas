@@ -50,7 +50,7 @@ type
 
 var
   Tables: array of TTable;
-  CurrentTableG: TTable;
+  TableForAdd: TTable;
 
 implementation
 
@@ -63,9 +63,9 @@ begin
   CurrentTable := TTable.Create;
   CurrentTable.Name := AName;
   CurrentTable.Caption := ACaption;
-  CurrentTableG := CurrentTable;
+  TableForAdd := CurrentTable;
   Setlength(Tables, length(Tables) + 1);
-  Tables[high(Tables)] := CurrentTableG;
+  Tables[high(Tables)] := TableForAdd;
 end;
 
 { TField }
@@ -76,9 +76,9 @@ class procedure TField.AddField(AName, ACaption: string; AWidth: integer;
 var
   CurrentField: TField;
 begin
-  SetLength(CurrentTableG.Fields, length(CurrentTableG.Fields) + 1);
-  CurrentTableG.Fields[High(CurrentTableG.Fields)] := TField.Create;
-  with CurrentTableG.Fields[High(CurrentTableG.Fields)] do
+  SetLength(TableForAdd.Fields, length(TableForAdd.Fields) + 1);
+  TableForAdd.Fields[High(TableForAdd.Fields)] := TField.Create;
+  with TableForAdd.Fields[High(TableForAdd.Fields)] do
   begin
     Name := AName;
     Caption := ACaption;
@@ -93,14 +93,14 @@ end;
 
 initialization
   TTable.AddTable('Students', 'Студенты');
-  TField.AddField('StudentInitials', 'ФИО', 200, FTString, true, false, 'STUDENTS');
-  TField.AddField('GroupID', 'Номер Группы', 100, FTInteger, false, true, 'GROUPS',
-                  'GROUPID');
-  TField.AddField('GroupNumber', 'Номер Группы', 100, FTInteger, true, false, 'GROUPS');
+  TField.AddField('StudentInitials', 'ФИО', 200, FTString, true, false, 'Students');
+  TField.AddField('GroupID', 'Номер Группы', 100, FTInteger, false, true, 'Groups',
+                  'GroupID');
+  TField.AddField('GroupNumber', 'Номер Группы', 100, FTInteger, true, false, 'Groups');
 
   TTable.AddTable('Teachers', 'Преподаватели');
-  TField.AddField('TeacherID', 'ID', 100, FTInteger, false, false, 'TEACHERS');
-  TField.AddField('TeacherInitials', 'ФИО', 200, FTString, true, false, 'TEACHERS');
+  TField.AddField('TeacherID', 'ID', 100, FTInteger, false, false, 'Teachers');
+  TField.AddField('TeacherInitials', 'ФИО', 200, FTString, true, false, 'Teachers');
 
   TTable.AddTable('EducActivities', 'Тип занятия');
   TField.AddField('EducID', 'ID', 100, FTInteger, false, false, 'EducActivities');
@@ -131,43 +131,43 @@ initialization
   TField.AddField('WeekDayNumber', 'Номер', 100, FTString, false, false, 'WeekDays');
 
   TTable.AddTable('Schedules', 'Расписание');
-  TField.AddField('GroupID', 'ID Группа', 100, FTInteger, false, true, 'GROUPS',
-                  'GROUPID');
-  TField.AddField('GroupNumber', 'Номер Группы', 100, FTInteger, true, false, 'GROUPS');
+  TField.AddField('GroupID', 'ID Группа', 100, FTInteger, false, true, 'Groups',
+                  'GroupID');
+  TField.AddField('GroupNumber', 'Номер Группы', 100, FTInteger, true, false, 'Groups');
   TField.AddField('WeekDayID', 'ID', 100, FTInteger, false, true,
-                  'WEEKDAYS', 'WEEKDAYID');
+                  'WeekDays', 'WeekDayID');
   TField.AddField('WeekDayName', 'Название', 150, FTString, true, false, 'WeekDays');
   TField.AddField('PairID', 'Номер пары', 100, FTInteger, false, true,
-                  'PAIRS', 'PAIRID');
+                  'Pairs', 'PairID');
   TField.AddField('PairBegin', 'Начало', 150, FTString, true, false, 'Pairs');
   TField.AddField('PairEnd', 'Конец', 150, FTString, true, false, 'Pairs');
   TField.AddField('PairNumber', 'Номер', 100, FTString, true, false, 'Pairs');
   TField.AddField('SubjectID', 'Предмет', 100, FTInteger, false, true,
-                  'SUBJECTS', 'SUBJECTID');
+                  'Subjects', 'SubjectID');
   TField.AddField('SubjectName', 'Название', 350, FTString, true, false, 'Subjects');
   TField.AddField('EducID', 'Тип занятия', 100, FTInteger, false, true,
-                  'EDUCACTIVITIES', 'EDUCID');
+                  'EducActivities', 'EducID');
   TField.AddField('EducName', 'Название', 100, FTString, true, false, 'EducActivities');
   TField.AddField('TeacherID', 'Преподаватель', 100, FTInteger, false, true,
-                  'TEACHERS', 'TEACHERID');
-  TField.AddField('TeacherInitials', 'ФИО', 200, FTString, true, false, 'TEACHERS');
+                  'Teachers', 'TeacherID');
+  TField.AddField('TeacherInitials', 'ФИО', 200, FTString, true, false, 'Teachers');
   TField.AddField('AudienceID', 'Номер аудитории', 100, FTInteger, false, true,
-                  'AUDIENCES', 'AUDIENCEID');
+                  'Audiences', 'AudienceID');
   TField.AddField('AudienceNumber', 'Номер аудитории', 200, FTString, true, false, 'Audiences');
 
   TTable.AddTable('Teachers_Subjects', 'Преподователь-Предмет');
   TField.AddField('TeacherID', 'Преподаватель', 100, FTInteger, false, true,
                   'TEACHERS', 'TEACHERID');
-  TField.AddField('TeacherInitials', 'ФИО', 200, FTString, true, false, 'TEACHERS');
+  TField.AddField('TeacherInitials', 'ФИО', 200, FTString, true, false, 'Teachers');
   TField.AddField('SubjectID', 'Предмет', 100, FTInteger, false, true,
-                  'SUBJECTS', 'SUBJECTID');
+                  'Subjects', 'SubjectID');
   TField.AddField('SubjectName', 'Название', 350, FTString, true, false, 'Subjects');
 
   TTable.AddTable('Group_Subjects', 'Группа-Предмет');
-  TField.AddField('GroupID', 'ID Группа', 100, FTInteger, false, true, 'GROUPS',
-                  'GROUPID');
-  TField.AddField('GroupNumber', 'Номер Группы', 100, FTInteger, true, false, 'GROUPS');
+  TField.AddField('GroupID', 'ID Группа', 100, FTInteger, false, true, 'Groups',
+                  'GroupID');
+  TField.AddField('GroupNumber', 'Номер Группы', 100, FTInteger, true, false, 'Groups');
   TField.AddField('SubjectID', 'Предмет', 100, FTInteger, false, true,
-                  'SUBJECTS', 'SUBJECTID');
+                  'Subjects', 'SubjectID');
   TField.AddField('SubjectName', 'Название', 350, FTString, true, false, 'Subjects');
 end.

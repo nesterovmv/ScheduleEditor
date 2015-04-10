@@ -46,7 +46,7 @@ begin
     MenuItem := TMenuItem.Create(Self);
     Directory.Add(MenuItem);
     MenuItem.Caption := Tables[i].PCaption;
-    MenuItem.Tag:=i;
+    MenuItem.Tag := i;
     MenuItem.OnClick := @DirectoryClick;
   end;
 end;
@@ -75,7 +75,7 @@ begin
     MenuItem.Checked := true;
     DirForm.Caption := MenuItem.Caption;
     DirForm.Show;
-    DirForm.ApporpriateItem := MenuItem;
+    DirForm.ConformityItemInDir := MenuItem;
     DirForm.GridAdd(Tables[MenuItem.Tag]);
     //DirForm.OnClose := @FormClose;
   end;
