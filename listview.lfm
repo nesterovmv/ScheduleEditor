@@ -1,30 +1,30 @@
 object ListForm: TListForm
-  Left = 272
-  Height = 532
-  Top = 45
-  Width = 809
-  ClientHeight = 532
-  ClientWidth = 809
+  Left = 342
+  Height = 653
+  Top = 0
+  Width = 788
+  ClientHeight = 653
+  ClientWidth = 788
   OnClose = FormClose
   LCLVersion = '1.2.4.0'
-  object DBGrid1: TDBGrid
+  object DBGrid: TDBGrid
     Left = 24
-    Height = 419
-    Top = 24
-    Width = 760
+    Height = 392
+    Top = 72
+    Width = 696
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWindow
     Columns = <>
-    DataSource = DataSource1
+    DataSource = DataSource
     TabOrder = 0
-    TitleImageList = ImageList1
-    OnTitleClick = DBGrid1TitleClick
+    TitleImageList = ImageList
+    OnTitleClick = DBGridTitleClick
   end
   object DBNavigator1: TDBNavigator
-    Left = 120
+    Left = 24
     Height = 40
-    Top = 464
-    Width = 304
+    Top = 16
+    Width = 288
     BevelOuter = bvNone
     ChildSizing.EnlargeHorizontal = crsScaleChilds
     ChildSizing.EnlargeVertical = crsScaleChilds
@@ -33,13 +33,52 @@ object ListForm: TListForm
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 100
     ClientHeight = 40
-    ClientWidth = 304
-    DataSource = DataSource1
+    ClientWidth = 288
+    DataSource = DataSource
     Options = []
     TabOrder = 1
     VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
   end
-  object SQLQuery1: TSQLQuery
+  object AddFilter: TButton
+    Left = 24
+    Height = 34
+    Top = 480
+    Width = 171
+    Caption = 'Добавить фильтр'
+    OnClick = AddFilterClick
+    TabOrder = 2
+  end
+  object ClearFiltersList: TButton
+    Left = 392
+    Height = 34
+    Top = 480
+    Width = 175
+    Caption = 'Очистить список фильтров'
+    OnClick = ClearFiltersListClick
+    TabOrder = 3
+  end
+  object ScrollBox: TScrollBox
+    Left = 0
+    Height = 133
+    Top = 520
+    Width = 788
+    HorzScrollBar.Page = 1
+    VertScrollBar.Page = 1
+    VertScrollBar.Tracking = True
+    Align = alBottom
+    BorderStyle = bsNone
+    TabOrder = 4
+  end
+  object FiltersApply: TSpeedButton
+    Left = 208
+    Height = 32
+    Top = 482
+    Width = 171
+    Caption = 'Применить'
+    Enabled = False
+    OnClick = FiltersApplyClick
+  end
+  object SQLQuery: TSQLQuery
     FieldDefs = <>
     Database = DataModule1.IBConnection1
     Transaction = DataModule1.SQLTransaction1
@@ -47,12 +86,12 @@ object ListForm: TListForm
     left = 69
     top = 22
   end
-  object DataSource1: TDataSource
-    DataSet = SQLQuery1
+  object DataSource: TDataSource
+    DataSet = SQLQuery
     left = 16
     top = 22
   end
-  object ImageList1: TImageList
+  object ImageList: TImageList
     left = 128
     top = 24
     Bitmap = {
