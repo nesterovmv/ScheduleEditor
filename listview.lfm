@@ -24,7 +24,7 @@ object ListForm: TListForm
     Left = 24
     Height = 40
     Top = 16
-    Width = 288
+    Width = 304
     BevelOuter = bvNone
     ChildSizing.EnlargeHorizontal = crsScaleChilds
     ChildSizing.EnlargeVertical = crsScaleChilds
@@ -33,7 +33,7 @@ object ListForm: TListForm
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 100
     ClientHeight = 40
-    ClientWidth = 288
+    ClientWidth = 304
     DataSource = DataSource
     Options = []
     TabOrder = 1

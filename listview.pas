@@ -34,6 +34,8 @@ type
     procedure GridAdd(Table: TTable);
     procedure DoSQLQuery(SQLText: string);
     procedure AssignmentProperty(EditTable: TTable);
+    procedure ParamsAdd(FilterPanels: array of FilterPanel);
+    //procedure ParamsAdd(PanelFilter: TPanel);
   public
     { public declarations }
     ConformityItemInDir: TmenuItem;
@@ -42,6 +44,7 @@ type
     ClickCheck: boolean;
     SQLTextForSort: string;
     PanelsArray: array of FilterPanel;
+    Params: array of string;
   end;
 
 var
@@ -55,8 +58,7 @@ implementation
 
 procedure TListForm.DoSQLQuery(SQLText: string);
 begin
-  SQLQuery.SQL.Clear;
-  SQLQuery.SQL.Add(SQLText);
+  SQLQuery.SQL.Text := SQLText;
   SQLQuery.Close;
   SQLQuery.Open;
 end;
@@ -90,6 +92,7 @@ begin
   begin
     SQLTextForSort := SQLQuery.SQL.Text;
     Delete(SQLTextForSort, length(SQLTextForSort) - 5, 5);
+    //showmessage(SQLTextForSort);
     DoSQLQuery(SQLTextForSort);
     DBGrid.Columns[IndexForImage].title.ImageIndex := 1;
     ClickCheck := False;
@@ -135,6 +138,20 @@ begin
     Parent := ScrollBox;
     Top := 26 * high(PanelsArray);
     Left := 24;
+
+    if high(PanelsArray) <> 0 then
+    begin
+      with CBoxOfFilterContact do
+      begin
+        Items[0] := 'И';
+        Items[1] := 'ИЛИ';
+        ItemIndex := 0;
+        OnChange := @FilterConditionsChange;
+      end;
+    end
+    else
+      CBoxOfFilterContact.Visible := False;
+
     with CBoxOfFields do
     begin
       for i := 0 to (DBGrid.Columns.Count - 1) do
@@ -196,6 +213,8 @@ var
   SQLTextForFilter: string;
 begin
   PanelsArray[TButton(Sender).Tag].Free;
+  if (TButton(Sender).Tag = 0) and (TButton(Sender).Tag <> high(PanelsArray)) then
+  PanelsArray[1].CBoxOfFilterContact.Visible := False;
   if TButton(Sender).Tag <> high(PanelsArray) then
     for i := TButton(Sender).Tag to (high(PanelsArray) - 1) do
     begin
@@ -218,9 +237,9 @@ var
   SQLQueryText: string;
   IsEditEmpty: boolean;
 begin
-  IsEditEmpty := false;
+  IsEditEmpty := False;
   for i := 0 to high(PanelsArray) do
-    if PanelsArray[i].EditConst.text = '' then
+    if PanelsArray[i].EditConst.Text = '' then
     begin
       IsEditEmpty := True;
       break;
@@ -246,6 +265,8 @@ begin
         if PanelsArray[i].CBoxOfFields.Items[PanelsArray[i].CBoxOfFields.ItemIndex] =
           DBGrid.Columns.Items[j].Title.Caption then
         begin
+          if DBGrid.Columns.Items[j].Visible = true then
+          begin
           SQLQueryText += ' (' + DBGrid.Columns.Items[j].FieldName;
           case PanelsArray[i].CBoxOfConditions.ItemIndex of
             0: SQLQueryText += ' = ';
@@ -254,12 +275,19 @@ begin
             3: SQLQueryText += ' Containing ';
             4: SQLQueryText += ' Starting with ';
           end;
-          SQLQueryText += '''' + PanelsArray[i].EditConst.Text + '''' + ')';
+          SQLQueryText += ':param' + inttostr(i) + ' )';
           if i <> high(PanelsArray) then
-            SQLQueryText += ' and ';
+          begin
+            case PanelsArray[i + 1].CBoxOfFilterContact.ItemIndex of
+              0: SQLQueryText += ' and ';
+              1: SQLQueryText += ' or ';
+            end;
+          end;
+         end;
         end;
     end;
     //ShowMessage(SQLQueryText);
+    ParamsAdd(PanelsArray);
     DoSQLQuery(SQLQueryText);
     AssignmentProperty(TableWithFilters);
   end;
@@ -268,6 +296,36 @@ end;
 procedure TListForm.FilterConditionsChange(Sender: TObject);
 begin
   FiltersApply.Enabled := True;
+end;
+
+procedure TListForm.ParamsAdd(FilterPanels: array of FilterPanel);
+var
+  i, j, k: integer;
+begin
+  Setlength(Params, length(FilterPanels));
+  for k := 0 to high(FilterPanels) do
+  begin
+    Params[k] := Format('param%d', [k]);
+    for i := 0 to (DBGrid.Columns.Count - 1) do
+      if FilterPanels[k].CBoxOfFields.Items[FilterPanels[k].CBoxOfFields.ItemIndex] =
+        DBGrid.Columns.Items[i].Title.Caption then
+        for j := 0 to high(SortTable.Fields) do
+          if SortTable.Fields[j].PName = DBGrid.Columns.Items[i].FieldName then
+            case SortTable.Fields[j].PMyType of
+              ftString:
+              begin
+                SQLQuery.Params.CreateParam(ftstring, Params[k], PTInput);
+                SQLQuery.ParamByName(Params[k]).AsString :=
+                  FilterPanels[k].EditConst.Text;
+              end;
+              ftInteger:
+              begin
+                SQLQuery.Params.CreateParam(ftinteger, Params[k], PTInput);
+                SQLQuery.ParamByName(Params[k]).AsInteger :=
+                  StrToInt(FilterPanels[k].EditConst.Text);
+              end;
+            end;
+  end;
 end;
 
 end.

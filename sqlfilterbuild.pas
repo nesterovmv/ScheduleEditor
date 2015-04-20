@@ -10,6 +10,7 @@ uses
 
 type
   FilterPanel = class(TPanel)
+    CBoxOfFilterContact: TComboBox;
     CBoxOfFields: TComboBox;
     CBoxOfConditions: TComboBox;
     EditConst: TEdit;
@@ -27,13 +28,24 @@ begin
   Visible := True;
   BevelOuter := bvNone;
 
+  CBoxOfFilterContact := TComboBox.Create(self);
+  with CBoxOfFilterContact do
+  begin
+   Parent := self;
+   Width := 60;
+   Height := 26;
+   Left := 24;
+   Visible := True;
+   ReadOnly := True;
+  end;
+
   CBoxOfFields := TComboBox.Create(self);
   with CBoxOfFields do
   begin
    Parent := self;
    Width := 171;
    Height := 26;
-   Left := 24;
+   Left := 94;
    Visible := True;
    ReadOnly := True;
   end;
@@ -44,7 +56,7 @@ begin
    Parent := self;
    Width := 171;
    Height := 26;
-   Left := 205;
+   Left := 275;
    Visible := True;
    ReadOnly := True;
   end;
@@ -56,7 +68,7 @@ begin
    Caption := '';
    Width := 171;
    Height := 26;
-   Left := 386;
+   Left := 456;
    Visible := True;
   end;
 
@@ -67,7 +79,7 @@ begin
    Caption := 'удалить';
    Width := 100;
    Height := 26;
-   Left := 567;
+   Left := 637;
    Visible := true;
   end;
 end;
