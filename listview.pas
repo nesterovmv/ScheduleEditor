@@ -39,9 +39,11 @@ type
   public
     { public declarations }
     ConformityItemInDir: TmenuItem;
-    SortTable: TTable;
+    //SortTable: TTable;
+    NowEditTable: TTable;
     TableWithFilters: TTable;
     ClickCheck: boolean;
+    CheckSortOtherField: array of integer;
     SQLTextForSort: string;
     PanelsArray: array of FilterPanel;
     Params: array of string;
@@ -87,44 +89,53 @@ procedure TListForm.DBGridTitleClick(Column: TColumn);
 var
   IndexForImage: integer;
 begin
-  IndexForImage := Column.Index;
-  if ClickCheck then
-  begin
-    SQLTextForSort := SQLQuery.SQL.Text;
-    Delete(SQLTextForSort, length(SQLTextForSort) - 5, 5);
-    //showmessage(SQLTextForSort);
-    DoSQLQuery(SQLTextForSort);
-    DBGrid.Columns[IndexForImage].title.ImageIndex := 1;
-    ClickCheck := False;
-  end
-  else
-  begin
-    SQLTextForSort := SQLQuery.SQL.Text;
-    if pos('ORDER', SQLTextForSort) <> 0 then
-    begin
-      Delete(SQLTextForSort, pos('ORDER', SQLTextForSort),
-        length(SQLTextForSort) - pos('ORDER', SQLTextForSort));
-      DoSQLQuery(SQLTextForSort);
-      DBGrid.Columns[IndexForImage].title.ImageIndex := -1;
+  Setlength(CheckSortOtherField, length(CheckSortOtherField) + 1);
+  CheckSortOtherField[high(CheckSortOtherField)] := Column.Index;
+  if length(CheckSortOtherField) <> 1 then
+    if CheckSortOtherField[high(CheckSortOtherField)] = CheckSortOtherField[high(CheckSortOtherField) - 1] then
+      Setlength(CheckSortOtherField, length(CheckSortOtherField) - 1)
+    else
       ClickCheck := False;
-      AssignmentProperty(SortTable);
-      exit;
+  begin
+    IndexForImage := Column.Index;
+    if ClickCheck then
+    begin
+      SQLTextForSort := SQLQuery.SQL.Text;
+      if pos(' DESC', SQLTextForSort) <> 0 then
+        Delete(SQLTextForSort, length(SQLTextForSort) - 5, 5);
+      DoSQLQuery(SQLTextForSort);
+      DBGrid.Columns[IndexForImage].title.ImageIndex := 1;
+      ClickCheck := False;
     end
     else
+    begin
       SQLTextForSort := SQLQuery.SQL.Text;
-    SQLTextForSort += 'ORDER BY ' + Column.FieldName + ' DESC';
-    DoSQLQuery(SQLTextForSort);
-    DBGrid.Columns[IndexForImage].title.ImageIndex := 0;
-    ClickCheck := True;
+      if pos('ORDER', SQLTextForSort) <> 0 then
+      begin
+        Delete(SQLTextForSort, pos('ORDER', SQLTextForSort),
+          length(SQLTextForSort) - pos('ORDER', SQLTextForSort));
+        DoSQLQuery(SQLTextForSort);
+        DBGrid.Columns[IndexForImage].title.ImageIndex := -1;
+        ClickCheck := False;
+        AssignmentProperty(NowEditTable);
+        exit;
+      end
+      else
+        SQLTextForSort := SQLQuery.SQL.Text;
+      SQLTextForSort += 'ORDER BY ' + Column.FieldName + ' DESC';
+      DoSQLQuery(SQLTextForSort);
+      DBGrid.Columns[IndexForImage].title.ImageIndex := 0;
+      ClickCheck := True;
+    end;
+    AssignmentProperty(NowEditTable);
   end;
-  AssignmentProperty(SortTable);
 end;
 
 procedure TListForm.GridAdd(Table: TTable);
 begin
   DoSQLQuery('SELECT ' + SQLSelectCreate(Table) + ' FROM ' + SQLJoinCreate(Table));
   AssignmentProperty(Table);
-  SortTable := Table;
+  NowEditTable := Table;
 end;
 
 procedure TListForm.AddFilterClick(Sender: TObject);
@@ -188,7 +199,7 @@ var
 begin
   if length(PanelsArray) <> 0 then
   begin
-    TableWithFilters := SortTable;
+    TableWithFilters := NowEditTable;
     SQLTextForFilter := SQLQuery.SQL.Text;
     if pos('where', SQLTextForFilter) <> 0 then
       Delete(SQLTextForFilter, pos('where', SQLTextForFilter),
@@ -214,7 +225,7 @@ var
 begin
   PanelsArray[TButton(Sender).Tag].Free;
   if (TButton(Sender).Tag = 0) and (TButton(Sender).Tag <> high(PanelsArray)) then
-  PanelsArray[1].CBoxOfFilterContact.Visible := False;
+    PanelsArray[1].CBoxOfFilterContact.Visible := False;
   if TButton(Sender).Tag <> high(PanelsArray) then
     for i := TButton(Sender).Tag to (high(PanelsArray) - 1) do
     begin
@@ -249,7 +260,7 @@ begin
   else
   begin
     FiltersApply.Enabled := False;
-    TableWithFilters := SortTable;
+    TableWithFilters := NowEditTable;
     SQLQueryText := SQLQuery.SQL.Text;
     if pos('ORDER', SQLQueryText) <> 0 then
       Delete(SQLQueryText, pos('ORDER', SQLQueryText),
@@ -265,25 +276,25 @@ begin
         if PanelsArray[i].CBoxOfFields.Items[PanelsArray[i].CBoxOfFields.ItemIndex] =
           DBGrid.Columns.Items[j].Title.Caption then
         begin
-          if DBGrid.Columns.Items[j].Visible = true then
+          if DBGrid.Columns.Items[j].Visible = True then
           begin
-          SQLQueryText += ' (' + DBGrid.Columns.Items[j].FieldName;
-          case PanelsArray[i].CBoxOfConditions.ItemIndex of
-            0: SQLQueryText += ' = ';
-            1: SQLQueryText += ' > ';
-            2: SQLQueryText += ' < ';
-            3: SQLQueryText += ' Containing ';
-            4: SQLQueryText += ' Starting with ';
-          end;
-          SQLQueryText += ':param' + inttostr(i) + ' )';
-          if i <> high(PanelsArray) then
-          begin
-            case PanelsArray[i + 1].CBoxOfFilterContact.ItemIndex of
-              0: SQLQueryText += ' and ';
-              1: SQLQueryText += ' or ';
+            SQLQueryText += ' (' + DBGrid.Columns.Items[j].FieldName;
+            case PanelsArray[i].CBoxOfConditions.ItemIndex of
+              0: SQLQueryText += ' = ';
+              1: SQLQueryText += ' > ';
+              2: SQLQueryText += ' < ';
+              3: SQLQueryText += ' Containing ';
+              4: SQLQueryText += ' Starting with ';
+            end;
+            SQLQueryText += ':param' + IntToStr(i) + ' )';
+            if i <> high(PanelsArray) then
+            begin
+              case PanelsArray[i + 1].CBoxOfFilterContact.ItemIndex of
+                0: SQLQueryText += ' and ';
+                1: SQLQueryText += ' or ';
+              end;
             end;
           end;
-         end;
         end;
     end;
     //ShowMessage(SQLQueryText);
@@ -309,9 +320,9 @@ begin
     for i := 0 to (DBGrid.Columns.Count - 1) do
       if FilterPanels[k].CBoxOfFields.Items[FilterPanels[k].CBoxOfFields.ItemIndex] =
         DBGrid.Columns.Items[i].Title.Caption then
-        for j := 0 to high(SortTable.Fields) do
-          if SortTable.Fields[j].PName = DBGrid.Columns.Items[i].FieldName then
-            case SortTable.Fields[j].PMyType of
+        for j := 0 to high(NowEditTable.Fields) do
+          if NowEditTable.Fields[j].PName = DBGrid.Columns.Items[i].FieldName then
+            case NowEditTable.Fields[j].PMyType of
               ftString:
               begin
                 SQLQuery.Params.CreateParam(ftstring, Params[k], PTInput);
