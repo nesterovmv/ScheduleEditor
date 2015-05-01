@@ -1,17 +1,17 @@
 object ListForm: TListForm
-  Left = 342
+  Left = 257
   Height = 653
   Top = 0
-  Width = 788
+  Width = 913
   ClientHeight = 653
-  ClientWidth = 788
+  ClientWidth = 913
   OnClose = FormClose
   LCLVersion = '1.2.4.0'
   object DBGrid: TDBGrid
     Left = 24
     Height = 392
     Top = 72
-    Width = 696
+    Width = 869
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWindow
     Columns = <>
@@ -61,7 +61,7 @@ object ListForm: TListForm
     Left = 0
     Height = 133
     Top = 520
-    Width = 788
+    Width = 913
     HorzScrollBar.Page = 1
     VertScrollBar.Page = 1
     VertScrollBar.Tracking = True

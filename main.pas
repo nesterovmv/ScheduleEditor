@@ -13,7 +13,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
-    MainMenu1: TMainMenu;
+    MainMenu: TMainMenu;
     Directory: TMenuItem;
     CloseProgram: TMenuItem;
     AboutProgram: TMenuItem;
@@ -77,13 +77,12 @@ begin
     DirForm.Show;
     DirForm.ConformityItemInDir := MenuItem;
     DirForm.GridAdd(Tables[MenuItem.Tag]);
-    //DirForm.OnClose := @FormClose;
   end;
 end;
 
 procedure TMainForm.AboutProgramClick(Sender: TObject);
 begin
-  ShowMessage('Программу создал Нестеров М.В. Б8103а2');
+  ShowMessage('Программу создал Нестеров М.В. под руководством Кленина А.С.');
 end;
 
 procedure TMainForm.CloseProgramClick(Sender: TObject);

@@ -39,7 +39,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="7">
       <Unit0>
         <Filename Value="EditorSchedules.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -54,12 +54,12 @@
         <UnitName Value="Main"/>
       </Unit1>
       <Unit2>
-        <Filename Value="datamodul.pas"/>
+        <Filename Value="connectionmodule.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="DataModule1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="DataModule"/>
-        <UnitName Value="DataModul"/>
+        <UnitName Value="ConnectionModule"/>
       </Unit2>
       <Unit3>
         <Filename Value="metadata.pas"/>
@@ -75,10 +75,15 @@
         <UnitName Value="ListView"/>
       </Unit4>
       <Unit5>
-        <Filename Value="sqlgenerationquery.pas"/>
+        <Filename Value="sqlquerybuilder.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="SQLGenerationQuery"/>
+        <UnitName Value="SQLQueryBuilder"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="filterpanelgenerator.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="FilterPanelGenerator"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

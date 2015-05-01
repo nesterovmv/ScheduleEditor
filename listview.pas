@@ -6,8 +6,8 @@ interface
 
 uses
   Classes, SysUtils, sqldb, DB, FileUtil, Forms, Controls, Graphics, Dialogs,
-  DBGrids, Menus, DBCtrls, StdCtrls, Buttons, MetaData, SQLGenerationQuery,
-  SQLFilterBuild;
+  DBGrids, Menus, DBCtrls, StdCtrls, Buttons, MetaData, SQLQueryBuilder,
+  FilterPanelGenerator;
 
 type
 
@@ -35,18 +35,18 @@ type
     procedure DoSQLQuery(SQLText: string);
     procedure AssignmentProperty(EditTable: TTable);
     procedure ParamsAdd(FilterPanels: array of FilterPanel);
-    //procedure ParamsAdd(PanelFilter: TPanel);
   public
     { public declarations }
     ConformityItemInDir: TmenuItem;
-    //SortTable: TTable;
     NowEditTable: TTable;
-    TableWithFilters: TTable;
     ClickCheck: boolean;
-    CheckSortOtherField: array of integer;
+    ArrayForColumnsComparison: array of integer;
     SQLTextForSort: string;
+    SortColumnIndex: integer;
     PanelsArray: array of FilterPanel;
     Params: array of string;
+    SaveSort: string;
+    SortImage: integer;
   end;
 
 var
@@ -89,15 +89,20 @@ procedure TListForm.DBGridTitleClick(Column: TColumn);
 var
   IndexForImage: integer;
 begin
-  Setlength(CheckSortOtherField, length(CheckSortOtherField) + 1);
-  CheckSortOtherField[high(CheckSortOtherField)] := Column.Index;
-  if length(CheckSortOtherField) <> 1 then
-    if CheckSortOtherField[high(CheckSortOtherField)] = CheckSortOtherField[high(CheckSortOtherField) - 1] then
-      Setlength(CheckSortOtherField, length(CheckSortOtherField) - 1)
+  Setlength(ArrayForColumnsComparison, length(ArrayForColumnsComparison) + 1);
+  ArrayForColumnsComparison[high(ArrayForColumnsComparison)] := Column.Index;
+  if length(ArrayForColumnsComparison) <> 1 then
+    if ArrayForColumnsComparison[high(ArrayForColumnsComparison)] =
+      ArrayForColumnsComparison[high(ArrayForColumnsComparison) - 1] then
+      Setlength(ArrayForColumnsComparison, length(ArrayForColumnsComparison) - 1)
     else
+    begin
       ClickCheck := False;
+      Setlength(ArrayForColumnsComparison, 0);
+    end;
   begin
     IndexForImage := Column.Index;
+    SortColumnIndex := Column.Index;
     if ClickCheck then
     begin
       SQLTextForSort := SQLQuery.SQL.Text;
@@ -195,23 +200,43 @@ end;
 procedure TListForm.ClearFiltersListClick(Sender: TObject);
 var
   i: integer;
-  SQLTextForFilter: string;
+  SQLQueryText: string;
 begin
   if length(PanelsArray) <> 0 then
   begin
-    TableWithFilters := NowEditTable;
-    SQLTextForFilter := SQLQuery.SQL.Text;
-    if pos('where', SQLTextForFilter) <> 0 then
-      Delete(SQLTextForFilter, pos('where', SQLTextForFilter),
-        length(SQLTextForFilter) - pos('where', SQLTextForFilter));
+    SQLQueryText := SQLQuery.SQL.Text;
+
+    if pos('ORDER', SQLQueryText) <> 0 then
+    begin
+      SortImage := DBGrid.Columns[SortColumnIndex].title.ImageIndex;
+      SaveSort := copy(SQLQueryText, pos('ORDER', SQLQueryText),
+        length(SQLQueryText) - pos('ORDER', SQLQueryText));
+    end
+    else
+      SaveSort := '';
+
+    if pos('where', SQLQueryText) <> 0 then
+      Delete(SQLQueryText, pos('where', SQLQueryText),
+        length(SQLQueryText) - pos('where', SQLQueryText));
+
+    //Сделать процедуру генерирующую запрос заного
+
     if length(PanelsArray) <> 0 then
     begin
       for i := 0 to high(PanelsArray) do
         PanelsArray[i].Free;
       Setlength(PanelsArray, 0);
     end;
-    DoSQLQuery(SQLTextForFilter);
-    AssignmentProperty(TableWithFilters);
+
+    if SaveSort <> '' then
+      SQLQueryText += SaveSort;
+
+    DoSQLQuery(SQLQueryText);
+
+    if SaveSort <> '' then
+      DBGrid.Columns[SortColumnIndex].title.ImageIndex := SortImage;
+
+    AssignmentProperty(NowEditTable);
   end;
   ScrollBox.BorderStyle := bsNone;
   FiltersApply.Enabled := False;
@@ -221,7 +246,6 @@ procedure TListForm.DeleteFilterMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
 var
   i: integer;
-  SQLTextForFilter: string;
 begin
   PanelsArray[TButton(Sender).Tag].Free;
   if (TButton(Sender).Tag = 0) and (TButton(Sender).Tag <> high(PanelsArray)) then
@@ -260,13 +284,24 @@ begin
   else
   begin
     FiltersApply.Enabled := False;
-    TableWithFilters := NowEditTable;
     SQLQueryText := SQLQuery.SQL.Text;
+
     if pos('ORDER', SQLQueryText) <> 0 then
+    begin
+      SortImage := DBGrid.Columns[SortColumnIndex].title.ImageIndex;
+      SaveSort := copy(SQLQueryText, pos('ORDER', SQLQueryText),
+        length(SQLQueryText) - pos('ORDER', SQLQueryText));
       Delete(SQLQueryText, pos('ORDER', SQLQueryText),
         length(SQLQueryText) - pos('ORDER', SQLQueryText));
-    Delete(SQLQueryText, pos('where', SQLQueryText),
-      length(SQLQueryText) - pos('where', SQLQueryText));
+    end
+    else
+      SaveSort := '';
+
+    if pos('where', SQLQueryText) <> 0 then
+      Delete(SQLQueryText, pos('where', SQLQueryText),
+        length(SQLQueryText) - pos('where', SQLQueryText));
+
+    //Сделать процедуру генерирующую запрос заного
 
     for i := 0 to high(PanelsArray) do
     begin
@@ -297,10 +332,17 @@ begin
           end;
         end;
     end;
-    //ShowMessage(SQLQueryText);
+
+    if SaveSort <> '' then
+      SQLQueryText += SaveSort;
+
     ParamsAdd(PanelsArray);
     DoSQLQuery(SQLQueryText);
-    AssignmentProperty(TableWithFilters);
+
+    if SaveSort <> '' then
+      DBGrid.Columns[SortColumnIndex].title.ImageIndex := SortImage;
+
+    AssignmentProperty(NowEditTable);
   end;
 end;
 

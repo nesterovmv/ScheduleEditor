@@ -86,6 +86,7 @@ begin
     MyType := AMyType;
     Visible := AVisible;
     NeedForJoin := ANeedForJoin;
+    //MyTableName := TableForAdd.Name;
     MyTableName := AMyTableName;
     JoinOfField := AJoinOfField;
   end;
@@ -94,6 +95,7 @@ end;
 initialization
   TTable.AddTable('Students', 'Студенты');
   TField.AddField('STUDENTINITIALS', 'ФИО', 200, FTString, true, false, 'STUDENTS');
+  //TField.AddField('STUDENTINITIALS', 'ФИО', 200, FTString, true, false);БЕЗ АРГУМЕНТА МАЙТЭЙБЛ ПУСТ
   TField.AddField('GROUPID', 'Номер Группы', 100, FTInteger, false, true,
                   'GROUPS', 'GROUPID');
   TField.AddField('GROUPNUMBER', 'Номер Группы', 100, FTInteger, true, false, 'GROUPS');
