@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
-  Menus, StdCtrls, MetaData, ListView;
+  Menus, StdCtrls, MetaData, ListView, CardForm;
 
 type
 
@@ -48,6 +48,7 @@ begin
     MenuItem.Caption := Tables[i].PCaption;
     MenuItem.Tag := i;
     MenuItem.OnClick := @DirectoryClick;
+    EventRefreshForms := @ListForm.RefreshForms;
   end;
 end;
 
@@ -72,11 +73,12 @@ begin
     end;
   begin
     DirForm := TListForm.Create(MenuItem);
-    MenuItem.Checked := true;
+    DirForm.NowEditTable := Tables[MenuItem.Tag];
+    MenuItem.Checked := True;
     DirForm.Caption := MenuItem.Caption;
     DirForm.Show;
     DirForm.ConformityItemInDir := MenuItem;
-    DirForm.GridAdd(Tables[MenuItem.Tag]);
+    DirForm.GridRefresh;
   end;
 end;
 

@@ -5,9 +5,9 @@ object DataModule1: TDataModule1
   VerticalOffset = 65
   Width = 262
   object IBConnection1: TIBConnection
-    Connected = True
+    Connected = False
     LoginPrompt = False
-    DatabaseName = 'D:\TEST.FDB'
+    DatabaseName = 'C:\EMP2.fdb'
     KeepConnection = False
     Password = 'masterkey'
     Transaction = SQLTransaction1

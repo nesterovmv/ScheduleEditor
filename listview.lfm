@@ -2,22 +2,28 @@ object ListForm: TListForm
   Left = 257
   Height = 653
   Top = 0
-  Width = 913
+  Width = 919
   ClientHeight = 653
-  ClientWidth = 913
+  ClientWidth = 919
   OnClose = FormClose
   LCLVersion = '1.2.4.0'
   object DBGrid: TDBGrid
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrCenter
     Left = 24
-    Height = 392
-    Top = 72
-    Width = 869
+    Height = 400
+    Top = 64
+    Width = 870
     Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 24
     Color = clWindow
     Columns = <>
     DataSource = DataSource
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
     TabOrder = 0
     TitleImageList = ImageList
+    OnDblClick = DBGridDblClick
     OnTitleClick = DBGridTitleClick
   end
   object DBNavigator1: TDBNavigator
@@ -61,7 +67,7 @@ object ListForm: TListForm
     Left = 0
     Height = 133
     Top = 520
-    Width = 913
+    Width = 919
     HorzScrollBar.Page = 1
     VertScrollBar.Page = 1
     VertScrollBar.Tracking = True
@@ -77,6 +83,33 @@ object ListForm: TListForm
     Caption = 'Применить'
     Enabled = False
     OnClick = FiltersApplyClick
+  end
+  object EditButton: TButton
+    Left = 472
+    Height = 40
+    Top = 16
+    Width = 136
+    Caption = 'Редактировать'
+    OnClick = DBGridDblClick
+    TabOrder = 5
+  end
+  object AddButton: TButton
+    Left = 616
+    Height = 41
+    Top = 16
+    Width = 136
+    Caption = 'Добавить'
+    OnClick = AddButtonClick
+    TabOrder = 6
+  end
+  object DeleteButton: TButton
+    Left = 757
+    Height = 40
+    Top = 16
+    Width = 136
+    Caption = 'Удалить'
+    OnClick = DeleteButtonClick
+    TabOrder = 7
   end
   object SQLQuery: TSQLQuery
     FieldDefs = <>

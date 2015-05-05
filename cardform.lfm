@@ -1,0 +1,42 @@
+object CardForEdit: TCardForEdit
+  Left = 387
+  Height = 270
+  Top = 132
+  Width = 346
+  BorderStyle = bsSingle
+  Caption = 'Карточка'
+  ClientHeight = 270
+  ClientWidth = 346
+  OnShow = FormShow
+  LCLVersion = '1.2.4.0'
+  object Apply: TButton
+    Left = 10
+    Height = 30
+    Top = 232
+    Width = 157
+    Caption = 'Принять'
+    OnClick = ApplyClick
+    TabOrder = 0
+  end
+  object Cancel: TButton
+    Left = 177
+    Height = 30
+    Top = 232
+    Width = 157
+    Caption = 'Отменить'
+    OnClick = CancelClick
+    TabOrder = 1
+  end
+  object CardDataSource: TDataSource
+    left = 41
+    top = 21
+  end
+  object CardSQLQuery: TSQLQuery
+    FieldDefs = <>
+    Database = DataModule1.IBConnection1
+    Transaction = DataModule1.SQLTransaction1
+    Params = <>
+    left = 127
+    top = 21
+  end
+end

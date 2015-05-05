@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, sqldb, DB, FileUtil, Forms, Controls, Graphics, Dialogs,
   DBGrids, Menus, DBCtrls, StdCtrls, Buttons, MetaData, SQLQueryBuilder,
-  FilterPanelGenerator;
+  FilterPanelGenerator, cardform, Windows, ConnectionModule;
 
 type
 
@@ -15,6 +15,9 @@ type
 
   TListForm = class(TForm)
     AddFilter: TButton;
+    EditButton: TButton;
+    AddButton: TButton;
+    DeleteButton: TButton;
     ClearFiltersList: TButton;
     DataSource: TDataSource;
     DBGrid: TDBGrid;
@@ -23,18 +26,22 @@ type
     ScrollBox: TScrollBox;
     FiltersApply: TSpeedButton;
     SQLQuery: TSQLQuery;
+    procedure AddButtonClick(Sender: TObject);
     procedure AddFilterClick(Sender: TObject);
     procedure ClearFiltersListClick(Sender: TObject);
+    procedure DBGridDblClick(Sender: TObject);
+    procedure DeleteButtonClick(Sender: TObject);
     procedure FilterConditionsChange(Sender: TObject);
     procedure DBGridTitleClick(Column: TColumn);
     procedure DeleteFilterMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure FiltersApplyClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-    procedure GridAdd(Table: TTable);
+    procedure GridRefresh;
     procedure DoSQLQuery(SQLText: string);
     procedure AssignmentProperty(EditTable: TTable);
     procedure ParamsAdd(FilterPanels: array of FilterPanel);
+    procedure RefreshForms;
   public
     { public declarations }
     ConformityItemInDir: TmenuItem;
@@ -47,6 +54,8 @@ type
     Params: array of string;
     SaveSort: string;
     SortImage: integer;
+    //Cards: array of integer;
+    //CardForms: array of TCardForEdit;
   end;
 
 var
@@ -136,11 +145,11 @@ begin
   end;
 end;
 
-procedure TListForm.GridAdd(Table: TTable);
+procedure TListForm.GridRefresh;
 begin
-  DoSQLQuery('SELECT ' + SQLSelectCreate(Table) + ' FROM ' + SQLJoinCreate(Table));
-  AssignmentProperty(Table);
-  NowEditTable := Table;
+  DoSQLQuery('SELECT ' + SQLSelectCreate(NowEditTable) + ' FROM ' +
+    SQLJoinCreate(NowEditTable));
+  AssignmentProperty(NowEditTable);
 end;
 
 procedure TListForm.AddFilterClick(Sender: TObject);
@@ -379,6 +388,79 @@ begin
               end;
             end;
   end;
+end;
+
+procedure TListForm.DBGridDblClick(Sender: TObject);
+var
+  i: integer;
+  NewCard: boolean;
+begin
+  NewCard := True;
+  for i := 0 to Screen.FormCount - 1 do
+    if Screen.Forms[i] is TCardForEdit then
+      if TCardForEdit(Screen.Forms[i]).ID = SQLQuery.Fields[0].Value then
+      begin
+        TCardForEdit(Screen.Forms[i]).ShowOnTop;
+        NewCard := False;
+        exit;
+      end;
+
+  if NewCard then
+  begin
+    Application.CreateForm(TCardForEdit, CardForEdit);
+    with CardForEdit do
+    begin
+      CurrentTable := NowEditTable;
+      ID := SQLQuery.Fields[0].Value;
+      Show;
+    end;
+    exit;
+  end;
+end;
+
+procedure TListForm.DeleteButtonClick(Sender: TObject);
+var
+  //i: integer;
+  SQLQueryBeforeClick: string;
+  Param: string;
+begin
+  if MessageBox(Handle, PChar(
+    Utf8ToAnsi('Вы действительно хотите удалить выбранную запись?')),
+    '', MB_YESNO) = mrYes then
+  begin
+    Param := 'param0';
+    SQLQuery.Params.CreateParam(FTInteger, Param, ptInput);
+    SQLQuery.ParamByName(Param).AsInteger := SQLQuery.Fields[0].Value;
+    SQLQueryBeforeClick := SQLQuery.SQL.Text;
+    SQLQuery.SQL.Text := SQLQueryForDelete(NowEditTable);
+    SQLQuery.ExecSQL;
+    ConnectionModule.DataModule1.SQLTransaction1.Commit;
+    SQLQuery.SQL.Text := SQLQueryBeforeClick;
+    RefreshForms;
+  end;
+end;
+
+procedure TListForm.AddButtonClick(Sender: TObject);
+begin
+  Application.CreateForm(TCardForEdit, CardForEdit);
+  with CardForEdit do
+  begin
+    CurrentTable := NowEditTable;
+    ID := -1;
+    Show;
+  end;
+end;
+
+procedure TListForm.RefreshForms;
+var
+  i: integer;
+begin
+  for i := 0 to Screen.FormCount - 1 do
+    if Screen.Forms[i] is TListForm then
+      TListForm(Screen.Forms[i]).GridRefresh
+    else
+    if Screen.Forms[i] is TCardForEdit then
+      TCardForEdit(Screen.Forms[i]).RefreshCards;
 end;
 
 end.

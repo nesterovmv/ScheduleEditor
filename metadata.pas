@@ -23,8 +23,8 @@ type
     JoinOfField: string;
   public
     class procedure AddField(AName, ACaption: string; AWidth: integer;
-      AMyType: TFieldType; AVisible: boolean; ANeedForJoin: boolean = false; AMyTableName: string = '';
-      AJoinOfField: string = '');
+      AMyType: TFieldType; AVisible: boolean; ANeedForJoin: boolean = False;
+      AMyTableName: string = ''; AJoinOfField: string = '');
     property PName: string read Name;
     property PCaption: string read Caption;
     property PWidth: integer read Width;
@@ -71,8 +71,8 @@ end;
 { TField }
 
 class procedure TField.AddField(AName, ACaption: string; AWidth: integer;
-  AMyType: TFieldType; AVisible: boolean; ANeedForJoin: boolean = false; AMyTableName: string = '';
-  AJoinOfField: string = '');
+  AMyType: TFieldType; AVisible: boolean; ANeedForJoin: boolean = False;
+  AMyTableName: string = ''; AJoinOfField: string = '');
 var
   CurrentField: TField;
 begin
@@ -86,7 +86,6 @@ begin
     MyType := AMyType;
     Visible := AVisible;
     NeedForJoin := ANeedForJoin;
-    //MyTableName := TableForAdd.Name;
     MyTableName := AMyTableName;
     JoinOfField := AJoinOfField;
   end;
@@ -94,82 +93,94 @@ end;
 
 initialization
   TTable.AddTable('Students', 'Студенты');
-  TField.AddField('STUDENTINITIALS', 'ФИО', 200, FTString, true, false, 'STUDENTS');
-  //TField.AddField('STUDENTINITIALS', 'ФИО', 200, FTString, true, false);БЕЗ АРГУМЕНТА МАЙТЭЙБЛ ПУСТ
-  TField.AddField('GROUPID', 'Номер Группы', 100, FTInteger, false, true,
-                  'GROUPS', 'GROUPID');
-  TField.AddField('GROUPNUMBER', 'Номер Группы', 100, FTInteger, true, false, 'GROUPS');
+  TField.AddField('STUDENTID', 'ID', 50, FTInteger, False, False, 'STUDENTS');
+  TField.AddField('STUDENTINITIALS', 'ФИО', 200, FTString, True, False, 'STUDENTS');
+  TField.AddField('GROUPID', 'Номер Группы', 100, FTInteger, False, True,
+    'GROUPS', 'GROUPID');
+  TField.AddField('GROUPNUMBER', 'Номер Группы', 100, FTInteger, True, False, 'GROUPS');
 
   TTable.AddTable('Teachers', 'Преподаватели');
-  TField.AddField('TEACHERID', 'ID', 100, FTInteger, false, false, 'TEACHERS');
-  TField.AddField('TEACHERINITIALS', 'Преподаватель', 200, FTString, true, false, 'TEACHERS');
+  TField.AddField('TEACHERID', 'ID', 100, FTInteger, False, False, 'TEACHERS');
+  TField.AddField('TEACHERINITIALS', 'Преподаватель', 200, FTString,
+    True, False, 'TEACHERS');
 
   TTable.AddTable('EducActivities', 'Тип занятия');
-  TField.AddField('EDUCID', 'ID', 100, FTInteger, false, false, 'EDUCACTIVITIES');
-  TField.AddField('EDUCNAME', 'Тип занятия', 100, FTString, true, false, 'EDUCACTIVITIES');
+  TField.AddField('EDUCID', 'ID', 100, FTInteger, False, False, 'EDUCACTIVITIES');
+  TField.AddField('EDUCNAME', 'Тип занятия', 100, FTString, True,
+    False, 'EDUCACTIVITIES');
 
   TTable.AddTable('Groups', 'Группы');
-  TField.AddField('GROUPID', 'ID', 30, FTInteger, false, false, 'GROUPS');
-  TField.AddField('GROUPNUMBER', 'Номер группы', 80, FTInteger, true, false, 'GROUPS');
-  TField.AddField('GROUPNAME', 'Название группы', 300, FTString, true, false, 'GROUPS');
+  TField.AddField('GROUPID', 'ID', 30, FTInteger, False, False, 'GROUPS');
+  TField.AddField('GROUPNUMBER', 'Номер группы', 80, FTInteger, True, False, 'GROUPS');
+  TField.AddField('GROUPNAME', 'Название группы', 300, FTString, True, False, 'GROUPS');
 
   TTable.AddTable('SUBJECTS', 'Предмет');
-  TField.AddField('SUBJECTID', 'ID', 100, FTInteger, false, false, 'SUBJECTS');
-  TField.AddField('SUBJECTNAME', 'Название предмета', 350, FTString, true, false, 'SUBJECTS');
+  TField.AddField('SUBJECTID', 'ID', 100, FTInteger, False, False, 'SUBJECTS');
+  TField.AddField('SUBJECTNAME', 'Название предмета', 350, FTString,
+    True, False, 'SUBJECTS');
 
   TTable.AddTable('Audiences', 'Аудитория');
-  TField.AddField('AUDIENCEID', 'ID', 100, FTInteger, false, false, 'AUDIENCES');
-  TField.AddField('AUDIENCENUMBER', 'Номер аудитории', 200, FTString, true, false, 'AUDIENCES');
+  TField.AddField('AUDIENCEID', 'ID', 100, FTInteger, False, False, 'AUDIENCES');
+  TField.AddField('AUDIENCENUMBER', 'Номер аудитории', 200, FTString,
+    True, False, 'AUDIENCES');
 
   TTable.AddTable('Pairs', 'Занятие');
-  TField.AddField('PAIRSID', 'ID', 100, FTInteger, false, false, 'PAIRS');
-  TField.AddField('PAIRSBEGIN', 'Начало', 150, FTString, true, false, 'PAIRS');
-  TField.AddField('PAIRSEND', 'Конец', 150, FTString, true, false, 'PAIRS');
-  TField.AddField('PAIRNUMBER', 'Номер пары', 100, FTString, true, false, 'PAIRS');
+  TField.AddField('PAIRID', 'ID', 100, FTInteger, False, False, 'PAIRS');
+  TField.AddField('PAIRBEGIN', 'Начало', 150, FTString, True, False, 'PAIRS');
+  TField.AddField('PAIREND', 'Конец', 150, FTString, True, False, 'PAIRS');
+  TField.AddField('PAIRNUMBER', 'Номер пары', 100, FTString, True, False, 'PAIRS');
 
   TTable.AddTable('WeekDays', 'День недели');
-  TField.AddField('WEEKDAYID', 'ID', 100, FTInteger, false, false, 'WEEKDAYS');
-  TField.AddField('WEEKDAYNAME', 'День недели', 150, FTString, true, false, 'WEEKDAYS');
-  TField.AddField('WEEKDAYNUMBER', 'Номер дня', 100, FTString, false, false, 'WEEKDAYS');
+  TField.AddField('WEEKDAYID', 'ID', 100, FTInteger, False, False, 'WEEKDAYS');
+  TField.AddField('WEEKDAYNAME', 'День недели', 150, FTString, True, False, 'WEEKDAYS');
+  TField.AddField('WEEKDAYNUMBER', 'Номер дня', 100, FTString, True, False, 'WEEKDAYS');
 
   TTable.AddTable('Schedules', 'Расписание');
-  TField.AddField('GROUPID', 'ID Группы', 100, FTInteger, false, true, 'GROUPS',
-                  'GROUPID');
-  TField.AddField('GROUPNUMBER', 'Номер Группы', 100, FTInteger, true, false, 'GROUPS');
-  TField.AddField('WEEKDAYID', 'ID', 100, FTInteger, false, true,
-                  'WEEKDAYS', 'WEEKDAYID');
-  TField.AddField('WEEKDAYNAME', 'День недели', 150, FTString, true, false, 'WEEKDAYS');
-  TField.AddField('PAIRID', 'Номер пары', 100, FTInteger, false, true,
-                  'PAIRS', 'PAIRID');
-  TField.AddField('PAIRBEGIN', 'Начало', 150, FTString, true, false, 'PAIRS');
-  TField.AddField('PAIREND', 'Конец', 150, FTString, true, false, 'PAIRS');
-  TField.AddField('PAIRNUMBER', 'Номер пары', 100, FTString, true, false, 'PAIRS');
-  TField.AddField('SUBJECTID', 'ID', 100, FTInteger, false, true,
-                  'SUBJECTS', 'SUBJECTID');
-  TField.AddField('SUBJECTNAME', 'Название предмета', 350, FTString, true, false, 'SUBJECTS');
-  TField.AddField('EDUCID', 'Тип занятия', 100, FTInteger, false, true,
-                  'EDUCACTIVITIES', 'EducID');
-  TField.AddField('EducName', 'Тип занятия', 100, FTString, true, false, 'EDUCACTIVITIES');
-  TField.AddField('TeacherID', 'Преподаватель', 100, FTInteger, false, true,
-                  'TEACHERS', 'TEACHERID');
-  TField.AddField('TEACHERINITIALS', 'Преподаватель', 200, FTString, true, false, 'TEACHERS');
-  TField.AddField('AUDIENCEID', 'Номер аудитории', 100, FTInteger, false, true,
-                  'AUDIENCES', 'AUDIENCEID');
-  TField.AddField('AUDIENCENUMBER', 'Номер аудитории', 200, FTString, true, false, 'AUDIENCES');
+  TField.AddField('RECORDID', 'ID', 100, FTInteger, False, False, 'SCHEDULES');
+  TField.AddField('GROUPID', 'ID', 100, FTInteger, False, True, 'GROUPS',
+    'GROUPID');
+  TField.AddField('GROUPNUMBER', 'Номер Группы', 100, FTInteger, True, False, 'GROUPS');
+  TField.AddField('WEEKDAYID', 'ID', 100, FTInteger, False, True,
+    'WEEKDAYS', 'WEEKDAYID');
+  TField.AddField('WEEKDAYNAME', 'День недели', 150, FTString, True, False, 'WEEKDAYS');
+  TField.AddField('PAIRID', 'ID', 100, FTInteger, False, True,
+    'PAIRS', 'PAIRID');
+  TField.AddField('PAIRNUMBER', 'Номер пары', 100, FTString, True, False, 'PAIRS');
+  TField.AddField('SUBJECTID', 'ID', 100, FTInteger, False, True,
+    'SUBJECTS', 'SUBJECTID');
+  TField.AddField('SUBJECTNAME', 'Название предмета', 350, FTString,
+    True, False, 'SUBJECTS');
+  TField.AddField('EDUCID', 'ID', 100, FTInteger, False, True,
+    'EDUCACTIVITIES', 'EducID');
+  TField.AddField('EducName', 'Тип занятия', 100, FTString, True,
+    False, 'EDUCACTIVITIES');
+  TField.AddField('TeacherID', 'Преподаватель', 100, FTInteger, False, True,
+    'TEACHERS', 'TEACHERID');
+  TField.AddField('TEACHERINITIALS', 'Преподаватель', 200, FTString,
+    True, False, 'TEACHERS');
+  TField.AddField('AUDIENCEID', 'ID', 100, FTInteger, False, True,
+    'AUDIENCES', 'AUDIENCEID');
+  TField.AddField('AUDIENCENUMBER', 'Номер аудитории', 200, FTString,
+    True, False, 'AUDIENCES');
 
   TTable.AddTable('Teachers_Subjects', 'Преподователь-Предмет');
-  TField.AddField('TEACHERID', 'Преподаватель', 100, FTInteger, false, true,
-                  'TEACHERS', 'TEACHERID');
-  TField.AddField('TEACHERSINITIALS', 'Преподаватель', 200, FTString, true, false, 'TEACHERS');
-  TField.AddField('SUBJECTID', 'ID', 100, FTInteger, false, true,
-                  'SUBJECT', 'SUBJECTID');
-  TField.AddField('SUBJECTNAME', 'Название предмета', 350, FTString, true, false, 'SUBJECTS');
+  TField.AddField('RECORDID', 'ID', 100, FTInteger, False, False, 'TEACHERS_SUBJECTS');
+  TField.AddField('TEACHERID', 'ID', 100, FTInteger, False, True,
+    'TEACHERS', 'TEACHERID');
+  TField.AddField('TEACHERINITIALS', 'Преподаватель', 200, FTString,
+    True, False, 'TEACHERS');
+  TField.AddField('SUBJECTID', 'ID', 100, FTInteger, False, True,
+    'SUBJECTS', 'SUBJECTID');
+  TField.AddField('SUBJECTNAME', 'Название предмета', 350, FTString,
+    True, False, 'SUBJECTS');
 
   TTable.AddTable('Group_Subjects', 'Группа-Предмет');
-  TField.AddField('GROUPID', 'ID Группа', 100, FTInteger, false, true, 'GROUPS',
-                  'GROUPID');
-  TField.AddField('GROUPNUMBER', 'Номер Группы', 100, FTInteger, true, false, 'GROUPS');
-  TField.AddField('SUBJECTID', 'ID', 100, FTInteger, false, true,
-                  'SUBJECTS', 'SUBJECTID');
-  TField.AddField('SUBJECTNAME', 'Название предмета', 350, FTString, true, false, 'SUBJECTS');
+  TField.AddField('RECORDID', 'ID', 100, FTInteger, False, False, 'GROUP_SUBJECTS');
+  TField.AddField('GROUPID', 'ID', 100, FTInteger, False, True, 'GROUPS',
+    'GROUPID');
+  TField.AddField('GROUPNUMBER', 'Номер Группы', 100, FTInteger, True, False, 'GROUPS');
+  TField.AddField('SUBJECTID', 'ID', 100, FTInteger, False, True,
+    'SUBJECTS', 'SUBJECTID');
+  TField.AddField('SUBJECTNAME', 'Название предмета', 350, FTString,
+    True, False, 'SUBJECTS');
 end.
